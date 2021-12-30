@@ -3,9 +3,13 @@ pragma solidity ^0.4.17;
 contract CampaignFactory {
     address[] public campaigns;
 
-    function createCampaign(address _manager, uint _minContribution) public {
-        address campaign = new Campaign(_manager, _minContribution);
+    function createCampaign(uint _minContribution) public {
+        address campaign = new Campaign(msg.sender, _minContribution);
         campaigns.push(campaign);
+    }
+
+    function getDeployedCampaigns() public view returns(address[]) {
+        return campaigns;
     }
 }
 
@@ -21,9 +25,9 @@ contract Campaign {
 
     address public manager;
     uint public minContribution;
-    mapping(address=>bool) public contributors;
+    mapping(address => bool) public contributors;
     Budget[] public budgets;
-    uint contributorsCount;
+    uint public contributorsCount;
 
     constructor(address _manager, uint _minContribution) public {
         manager = _manager;
@@ -31,9 +35,10 @@ contract Campaign {
     }
 
     function contribute() public payable {
-        require(msg.value  > minContribution);
+        require(msg.value  >= minContribution);
 
         contributors[msg.sender] = true;
+        contributorsCount++;
     }
 
     function requestBudget(string _description, uint _amount, address _recipient) public managerOnly {
@@ -60,10 +65,6 @@ contract Campaign {
 
         budget.recipient.transfer(budget.amount);
         budget.completed = true;
-    }
-
-    function funds() public view returns(uint) {
-        return address(this).balance;
     }
 
     modifier managerOnly {

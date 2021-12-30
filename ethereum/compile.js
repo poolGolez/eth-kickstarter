@@ -19,7 +19,7 @@ fs.ensureDirSync(buildPath);
 const contracts = compiledSource.contracts;
 for(let contractKey in contracts) {
     const contractName = contractKey.replace(':', '');
-    fs.writeJSONSync(
+    fs.outputJSONSync(
         path.resolve(buildPath, `${contractName}.json`),
         contracts[contractKey]
     );
