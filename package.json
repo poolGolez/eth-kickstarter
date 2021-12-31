@@ -6,7 +6,8 @@
   "scripts": {
     "compile": "node ethereum/compile.js",
     "test": "npm run compile && mocha",
-    "deploy": "npm run compile && node ethereum/deploy.js"
+    "deploy": "npm run compile && node ethereum/deploy.js",
+    "dev": "next dev"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +17,9 @@
     "fs-extra": "^10.0.0",
     "ganache-cli": "^6.12.2",
     "mocha": "^9.1.3",
+    "next": "^12.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "solc": "^0.4.17",
     "web3": "^1.6.0"
   }
