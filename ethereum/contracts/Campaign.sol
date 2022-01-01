@@ -67,6 +67,16 @@ contract Campaign {
         budget.completed = true;
     }
 
+    function getSummary() public view returns(uint, uint, uint, uint, address)  {
+        return (
+            minContribution,
+            this.balance,
+            budgets.length,
+            contributorsCount,
+            manager
+        );
+    }
+
     modifier managerOnly {
         require(msg.sender == manager);
         _;
