@@ -1,10 +1,10 @@
 import { Component } from "react";
-import { Card, Grid } from "semantic-ui-react";
+import { Button, Card, Grid } from "semantic-ui-react";
 import ContributeForm from "../../components/ContributeForm";
 import Layout from "../../components/Layout";
 import Campaign from "../../ethereum/campaign";
 import web3 from "../../ethereum/web3";
-
+import { Link } from '../../routes';
 
 class CampaignsShow extends Component {
 
@@ -82,7 +82,7 @@ class CampaignsShow extends Component {
             <Layout>
                 <h3>Campaign Details</h3>
 
-                <Grid celled>
+                <Grid>
                     <Grid.Row>
                         <Grid.Column width={10}>
                             {this.renderCampaignSummary()}
@@ -91,6 +91,15 @@ class CampaignsShow extends Component {
                             <ContributeForm
                                 address={ this.props.campaignAddress }
                                 minimumContribution={ this.props.minimumContribution }/>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Link route={`/campaigns/${this.props.campaignAddress}/requests`}>
+                                <Button
+                                    primary
+                                    content="View Requests" />
+                            </Link>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
