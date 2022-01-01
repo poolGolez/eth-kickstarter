@@ -1,8 +1,10 @@
 import { Component } from "react";
-import { Button, Card, Form, Grid, GridColumn, Icon, Input } from "semantic-ui-react";
+import { Card, Grid } from "semantic-ui-react";
+import ContributeForm from "../../components/ContributeForm";
 import Layout from "../../components/Layout";
 import Campaign from "../../ethereum/campaign";
 import web3 from "../../ethereum/web3";
+
 
 class CampaignsShow extends Component {
 
@@ -14,13 +16,13 @@ class CampaignsShow extends Component {
     }
 
     static async getInitialProps(props) {
-        const { address } = props.query;
-        const campaignContract = Campaign(address);
+        const campaignAddress = props.query.address;
+        const campaignContract = Campaign(campaignAddress);
         const summary = await campaignContract.methods
                             .getSummary()
                             .call();
         return {
-            address,
+            campaignAddress,
             minimumContribution: summary[0],
             balance: summary[1],
             budgetsCount: summary[2],
@@ -28,20 +30,6 @@ class CampaignsShow extends Component {
             manager: summary[4]
         };
     }
-
-    onSubmit = async(event) => {
-        event.preventDefault();
-
-        const campaignContract = Campaign(this.props.address);
-        const [ account ] = await web3.eth.getAccounts();
-        await campaignContract.methods
-            .contribute()
-            .send({
-                from: account,
-                value: this.state.contribution,
-                gas: '1000000'
-            });
-    };
 
     renderCampaignSummary() {
         const {
@@ -89,27 +77,6 @@ class CampaignsShow extends Component {
             itemsPerRow="2"/>;
     }
 
-    renderContributeForm() {
-        return (
-            <div>
-                <h3>Contribute to this campaign!</h3>
-                <Form onSubmit={ this.onSubmit }>
-                    <Input
-                        label={{basic: true, content: 'wei'}}
-                        labelPosition='right'
-                        onChange={ event => this.setState({contribution: event.target.value}) }
-                        value={this.state.contribution} />
-                    <Button
-                        type='submit'
-                        icon='money'
-                        content='Contribute'
-                        style={{ marginTop: '16px' }}
-                        primary/>
-                </Form>
-            </div>
-        );
-    }
-
     render() {
         return (
             <Layout>
@@ -121,7 +88,9 @@ class CampaignsShow extends Component {
                             {this.renderCampaignSummary()}
                         </Grid.Column>
                         <Grid.Column width={6}>
-                            { this.renderContributeForm() }
+                            <ContributeForm
+                                address={ this.props.campaignAddress }
+                                minimumContribution={ this.props.minimumContribution }/>
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
