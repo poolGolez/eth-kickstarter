@@ -35,7 +35,7 @@ class CampaignsNew extends Component {
                 <Form
                     loading={ this.state.submitting }
                     onSubmit={ this.onSubmit }
-                    error={this.state.errorMessage}>
+                    error={ !!this.state.errorMessage }>
                     <Form.Field>
                         <label>Minimum Contribution</label>
                         <Input
