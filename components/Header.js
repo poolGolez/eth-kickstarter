@@ -1,16 +1,29 @@
 import React, { Component } from "react";
 import { Icon, Menu } from "semantic-ui-react";
+import { Link } from "../routes";
 
 class Header extends Component {
     render() {
         return (
             <Menu style={ {marginTop: '16px'} }>
-                <Menu.Item>KickStart</Menu.Item>
+                <Link route="/">
+                    <a className="item">
+                    KickStart
+                    </a>
+                </Link>
 
                 <Menu.Menu position='right'>
-                    <Menu.Item>Campaigns</Menu.Item>
-                    <Menu.Item>+</Menu.Item>
-                    </Menu.Menu>
+                    <Link route="/">
+                        <a className="item">
+                        Campaigns
+                        </a>
+                    </Link>
+                    <Link route="/campaigns/new">
+                        <a className="item">
+                        +
+                        </a>
+                    </Link>
+                </Menu.Menu>
             </Menu>
         );
     }
