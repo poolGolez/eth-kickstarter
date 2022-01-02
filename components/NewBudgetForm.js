@@ -1,9 +1,6 @@
-import { Button, Form, Input } from "semantic-ui-react";
+import { Button, Form, Input, Message } from "semantic-ui-react";
 import Campaign from "../ethereum/campaign";
 import web3 from "../ethereum/web3";
-import SuccessMessage from "./SuccessMessage";
-import ErrorMessage from "./ErrorMessage";
-
 const { Component } = require("react");
 
 class NewBudgetForm extends Component {
@@ -63,8 +60,14 @@ class NewBudgetForm extends Component {
     render() {
         return(
             <Form onSubmit={this.onSubmit} loading={ this.state.submitting }>
-                <SuccessMessage message={ this.state.successMessage }/>
-                <ErrorMessage message={ this.state.errorMessage } />
+                <Message positive hidden={ !this.state.successMessage.content }>
+                    <Message.Header>{ this.state.successMessage.header }</Message.Header>
+                    <p>{ this.state.successMessage.content }</p>
+                </Message>
+                <Message negative hidden={ !this.state.errorMessage.content }>
+                    <Message.Header>{ this.state.errorMessage.header }</Message.Header>
+                    <p>{ this.state.errorMessage.content }</p>
+                </Message>
                 <Form.Input
                     label="Description"
                     input="text"
