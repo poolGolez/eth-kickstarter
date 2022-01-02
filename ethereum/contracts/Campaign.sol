@@ -77,6 +77,10 @@ contract Campaign {
         );
     }
 
+    function getBudgetsCount() public view returns(uint) {
+        return budgets.length;
+    }
+
     modifier managerOnly {
         require(msg.sender == manager);
         _;
