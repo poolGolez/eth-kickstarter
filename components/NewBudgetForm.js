@@ -27,7 +27,6 @@ class NewBudgetForm extends Component {
         const campaign = Campaign(this.props.campaign);
 
         const amountWei = web3.utils.toWei(this.state.amount, 'ether');
-        console.log("Wei:", amountWei);
         try {
             await campaign.methods
                 .requestBudget(this.state.description, amountWei, this.state.recipient)

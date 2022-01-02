@@ -11,28 +11,40 @@ class RequestsIndex extends Component {
     static async getInitialProps(props) {
         const campaignAddress = props.query.address;
         const campaignContract = Campaign(campaignAddress);
+        const summary = await campaignContract.methods
+                            .getSummary()
+                            .call();
+
         const budgetsCount = parseInt(await campaignContract.methods
                                 .getBudgetsCount()
                                 .call());
-
         const budgets = await Promise.all(Array(budgetsCount).fill().map((_, index) => {
                             return campaignContract.methods.budgets(index).call();
                         }));
+        const campaign = {
+            addresss: campaignAddress,
+            minimumContribution: summary[0],
+            balance: summary[1],
+            budgetsCount: summary[2],
+            contributorsCount: summary[3],
+            manager: summary[4],
+            budgets
+        }
 
-        return { campaignAddress, budgets };
+        return { campaign };
     }
 
     render() {
         return (
             <Layout>
-                <Link route={`/campaigns/${this.props.campaignAddress}/requests/new`}>
+                <Link route={`/campaigns/${this.props.campaign.address}/requests/new`}>
                     <Button
                         floated="right"
                         content="Request new budget"
                         primary />
                 </Link>
                 <h3>Requests</h3>
-                <BudgetsTable budgets={ this.props.budgets }></BudgetsTable>
+                <BudgetsTable budgets={ this.props.campaign.budgets }></BudgetsTable>
             </Layout>
         );
     }
