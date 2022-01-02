@@ -2,6 +2,7 @@ import { Button, Form, Input } from "semantic-ui-react";
 import Campaign from "../ethereum/campaign";
 import web3 from "../ethereum/web3";
 import SuccessMessage from "./SuccessMessage";
+import ErrorMessage from "./ErrorMessage";
 
 const { Component } = require("react");
 
@@ -10,42 +11,60 @@ class NewBudgetForm extends Component {
         description: '',
         amount: '',
         recipient: '',
-        message: { header: '', content: ''},
+        successMessage: { header: '', content: ''},
+        errorMessage: { header: '', content: ''},
         submitting: false
     };
 
     onSubmit = async(event) => {
-        this.setState({ submitting: true });
+        this.setState({
+            successMessage: { header: '', content: ''},
+            errorMessage: { header: '', content: ''},
+            submitting: true
+        });
         event.preventDefault();
         console.log("State:", this.state);
-
 
         const [sender] = await web3.eth.getAccounts();
         console.log("Accounts:", sender);
         const campaign = Campaign(this.props.campaign);
-        await campaign.methods
-            .requestBudget(this.state.description, this.state.amount, this.state.recipient)
-            .send({
-                from: sender,
-                gas: '1000000'
-            });
 
-        this.setState({
-            description: '',
-            amount: '',
-            recipient: '',
-            message: {
-                header: 'Transaction successful',
-                content: 'Successfully requested new budget'
-            },
-            submitting: false
-        });
+        const amountWei = web3.utils.toWei(this.state.amount, 'ether');
+        console.log("Wei:", amountWei);
+        try {
+            await campaign.methods
+                .requestBudget(this.state.description, amountWei, this.state.recipient)
+                .send({
+                    from: sender,
+                    gas: '1000000'
+                });
+
+            this.setState({
+                description: '',
+                amount: '',
+                recipient: '',
+                successMessage: {
+                    header: 'Transaction successful',
+                    content: 'Successfully requested new budget.'
+                },
+                submitting: false
+            });
+        } catch (err) {
+            this.setState({
+                errorMessage: {
+                    header: 'Something went wrong with the transaction',
+                    content: err.message
+                },
+                submitting: false
+            });
+        }
     };
 
     render() {
         return(
             <Form onSubmit={this.onSubmit} loading={ this.state.submitting }>
-                <SuccessMessage message={ this.state.message }/>
+                <SuccessMessage message={ this.state.successMessage }/>
+                <ErrorMessage message={ this.state.errorMessage } />
                 <Form.Input
                     label="Description"
                     input="text"
