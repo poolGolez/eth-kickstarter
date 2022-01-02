@@ -1,12 +1,25 @@
-import { Icon, Label, Menu, Table } from "semantic-ui-react";
+import { Button, Icon, Label, Menu, Table } from "semantic-ui-react";
 import Layout from "../../../components/Layout";
+import { Link } from '../../../routes';
 
 const { Component } = require("react");
 
 class RequestsIndex extends Component {
+
+    static getInitialProps(props) {
+        const campaignAddress = props.query.address;
+        return { campaignAddress };
+    }
+
     render() {
         return (
             <Layout>
+                <Link route={`/campaigns/${this.props.campaignAddress}/requests/new`}>
+                    <Button
+                        floated="right"
+                        content="Add Request"
+                        primary />
+                </Link>
                 <h3>Requests</h3>
                 <Table celled>
                     <Table.Header>
