@@ -20,10 +20,8 @@ class NewBudgetForm extends Component {
             submitting: true
         });
         event.preventDefault();
-        console.log("State:", this.state);
 
         const [sender] = await web3.eth.getAccounts();
-        console.log("Accounts:", sender);
         const campaign = Campaign(this.props.campaign);
 
         const amountWei = web3.utils.toWei(this.state.amount, 'ether');

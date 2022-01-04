@@ -22,10 +22,10 @@ class BudgetsTableRow extends Component {
                     { this.props.budget.approvalsCount }
                 </Cell>
                 <Cell>
-                    <Button
-                        icon="thumbs up"
-                        content="Approve/Finalize"
-                        primary/>
+                    <Button icon="thumbs up" content="Approve" primary/>
+                </Cell>
+                <Cell>
+                    <Button icon="check" content="Finalize"positive/>
                 </Cell>
             </Row>
         );
