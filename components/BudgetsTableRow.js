@@ -12,14 +12,14 @@ class BudgetsTableRow extends Component {
                     <Label ribbon>{ this.props.index }</Label>
                 </Cell>
                 <Cell>{ this.props.budget.description }</Cell>
-                <Cell textAlign='right'>
+                <Cell textAlign="right">
                     { web3.utils.fromWei( this.props.budget.amount, 'ether') }
                 </Cell>
                 <Cell>
                     { this.props.budget.recipient }
                     </Cell>
-                <Cell>
-                    { this.props.budget.approvalsCount }
+                <Cell textAlign="right">
+                    { this.props.budget.approvalsCount } / { this.props.contributorsCount }
                 </Cell>
                 <Cell>
                     <Button icon="thumbs up" content="Approve" primary/>

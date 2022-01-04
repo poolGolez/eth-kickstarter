@@ -1,5 +1,6 @@
 const { Component } = require("react");
 import { Table } from "semantic-ui-react";
+import campaign from "../ethereum/campaign";
 import BudgetsTableRow from "./BudgetsTableRow";
 
 class BudgetsTable extends Component {
@@ -11,13 +12,13 @@ class BudgetsTable extends Component {
                     <Table.Row>
                         <Table.HeaderCell>ID</Table.HeaderCell>
                         <Table.HeaderCell>Description</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='right'>
+                        <Table.HeaderCell textAlign="right">
                             Amount (ether)
                         </Table.HeaderCell>
                         <Table.HeaderCell>Recipient</Table.HeaderCell>
-                        <Table.HeaderCell>Approval Count</Table.HeaderCell>
-                        <Table.HeaderCell>Approve</Table.HeaderCell>
-                        <Table.HeaderCell>Finalize</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="right">Approval Count</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">Approve</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">Finalize</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
 
@@ -26,6 +27,7 @@ class BudgetsTable extends Component {
                         (<BudgetsTableRow
                             key={ index + 1 }
                             index={ index + 1 }
+                            contributorsCount={ this.props.campaign.contributorsCount }
                             budget={ budget } />)) }
                 </Table.Body>
             </Table>

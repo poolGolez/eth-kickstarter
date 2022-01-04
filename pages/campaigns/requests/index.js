@@ -2,7 +2,6 @@ import { Button } from "semantic-ui-react";
 import Layout from "../../../components/Layout";
 import BudgetsTable from "../../../components/BudgetsTable";
 import Campaign from "../../../ethereum/campaign";
-import web3 from '../../../ethereum/web3';
 import { Link } from '../../../routes';
 
 const { Component } = require("react");
