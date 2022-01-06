@@ -18,7 +18,7 @@ const deploy = async() => {
         console.debug("Deploying contract...");
         const contract = await new web3.eth.Contract(contractInterface)
                                     .deploy({ data: compiledCampaignFactory.bytecode })
-                                    .send({ from: manager, gas: '1000000 '});
+                                    .send({ from: manager, gas: '1500000' });
         const contractAddress = contract.options.address;
 
         console.debug("Saving contract artifacts...");

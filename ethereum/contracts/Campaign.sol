@@ -74,7 +74,7 @@ contract Campaign {
     function getSummary() public view returns(uint, uint, uint, uint, address)  {
         return (
             minContribution,
-            this.balance,
+            address(this).balance,
             budgets.length,
             contributorsCount,
             manager
@@ -83,6 +83,18 @@ contract Campaign {
 
     function getBudgetsCount() public view returns(uint) {
         return budgets.length;
+    }
+
+    function getSelfApprovals() public view returns(bool[]) {
+        require(contributors[msg.sender]);
+
+        bool[] memory result = new bool[](budgets.length);
+        for(uint i = 0; i < budgets.length; i++) {
+            Budget storage budget = budgets[i];
+            result[i] = budget.approvals[msg.sender];
+        }
+
+        return result;
     }
 
     modifier managerOnly {
