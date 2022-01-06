@@ -3,6 +3,7 @@ import Layout from "../../../components/Layout";
 import BudgetsTable from "../../../components/BudgetsTable";
 import Campaign from "../../../ethereum/campaign";
 import { Link } from '../../../routes';
+import web3 from "../../../ethereum/web3";
 
 const { Component } = require("react");
 
@@ -34,6 +35,18 @@ class RequestsIndex extends Component {
         return { campaign };
     }
 
+    onApprove = async(budgetId) => {
+        const [sender] = await web3.eth.getAccounts();
+        const campaignContract = Campaign(this.props.campaign.address);
+        await campaignContract.methods
+            .approveBudget(budgetId)
+            .send({
+                from: sender,
+                gas: '1000000'
+            });
+        console.log(`Approved ${budgetId} by ${sender}`);
+    }
+
     render() {
         return (
             <Layout>
@@ -45,7 +58,8 @@ class RequestsIndex extends Component {
                 </Link>
                 <h3>Requests</h3>
                 <BudgetsTable
-                    campaign={ this.props.campaign }/>
+                    campaign={ this.props.campaign }
+                    onApprove={ this.onApprove }/>
             </Layout>
         );
     }

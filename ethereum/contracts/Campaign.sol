@@ -37,8 +37,10 @@ contract Campaign {
     function contribute() public payable {
         require(msg.value  >= minContribution);
 
-        contributors[msg.sender] = true;
-        contributorsCount++;
+        if(!contributors[msg.sender]){
+            contributors[msg.sender] = true;
+            contributorsCount++;
+        }
     }
 
     function requestBudget(string _description, uint _amount, address _recipient) public managerOnly {
@@ -54,8 +56,10 @@ contract Campaign {
 
     function approveBudget(uint budgetIndex) public contributorOnly {
         Budget storage budget = budgets[budgetIndex];
-        budget.approvals[msg.sender] = true;
+        require(!budget.approvals[msg.sender]);
+
         budget.approvalsCount++;
+        budget.approvals[msg.sender] = true;
     }
 
     function releaseBudget(uint budgetIndex) public managerOnly {

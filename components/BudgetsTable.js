@@ -28,7 +28,9 @@ class BudgetsTable extends Component {
                             key={ index + 1 }
                             index={ index + 1 }
                             contributorsCount={ this.props.campaign.contributorsCount }
-                            budget={ budget } />)) }
+                            budget={ budget }
+                            onApprove={ () => this.props.onApprove(index) }
+                            />)) }
                 </Table.Body>
             </Table>
         );

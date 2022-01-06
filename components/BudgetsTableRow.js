@@ -22,10 +22,14 @@ class BudgetsTableRow extends Component {
                     { this.props.budget.approvalsCount } / { this.props.contributorsCount }
                 </Cell>
                 <Cell>
-                    <Button icon="thumbs up" content="Approve" primary/>
+                    <Button
+                        icon="thumbs up"
+                        content="Approve"
+                        onClick={ this.props.onApprove }
+                        primary />
                 </Cell>
                 <Cell>
-                    <Button icon="check" content="Finalize"positive/>
+                    <Button icon="check" content="Finalize"positive />
                 </Cell>
             </Row>
         );
