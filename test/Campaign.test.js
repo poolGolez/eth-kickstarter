@@ -17,14 +17,14 @@ let campaign;
 beforeEach(async() => {
     accounts = await web3.eth.getAccounts();
     [manager, contributors[0], contributors[1], recipient] = accounts;
-
     factory = await new web3.eth.Contract(JSON.parse(compiledCampaignFactory.interface))
                 .deploy({ data: compiledCampaignFactory.bytecode })
-                .send({ from: manager, gas: '1000000' });
-    await factory.methods.createCampaign(250).send({
-        from: manager,
-        gas: '1000000'
-    });
+                .send({ from: manager, gas: '1500000' });
+    await factory.methods
+        .createCampaign(250).send({
+            from: manager,
+            gas: '1500000'
+        });
 
     [campaignAddress] = await factory.methods.getDeployedCampaigns().call();
     campaign = await new web3.eth.Contract(JSON.parse(compiledCampaign.interface), campaignAddress);
