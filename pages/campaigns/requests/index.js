@@ -9,59 +9,89 @@ const { Component } = require("react");
 
 class RequestsIndex extends Component {
 
+    state = {
+        loaded: false,
+        sender: '',
+        campaign: {
+            minimumContribution: '',
+            balance: '',
+            budgetsCount: 0,
+            contributorsCount: 0,
+            manager: '',
+            budgets: [],
+            approvals: []
+        }
+    };
+
     static async getInitialProps(props) {
         const campaignAddress = props.query.address;
-        const campaignContract = Campaign(campaignAddress);
+        return { campaignAddress };
+    }
+
+    async componentDidMount() {
+        const campaignContract = Campaign(this.props.campaignAddress);
         const summary = await campaignContract.methods
                             .getSummary()
                             .call();
+        console.log("Summary:", summary);
 
-        const budgetsCount = parseInt(await campaignContract.methods
-                                .getBudgetsCount()
-                                .call());
-        const budgets = await Promise.all(Array(budgetsCount).fill().map((_, index) => {
-                            return campaignContract.methods.budgets(index).call();
-                        }));
-        const campaign = {
-            address: campaignAddress,
-            minimumContribution: summary[0],
-            balance: summary[1],
-            budgetsCount: summary[2],
-            contributorsCount: summary[3],
-            manager: summary[4],
-            budgets
-        };
+        const minimumContribution = summary[0];
+        const balance = summary[1];
+        const budgetsCount = parseInt(summary[2]);
+        const contributorsCount = parseInt(summary[3]);
+        const manager = summary[4];
+        const budgets = await Promise.all(Array(parseInt(budgetsCount)).fill().map((_, index) => {
+                                        return campaignContract.methods.budgets(index).call();
+                                    }));
 
-        return { campaign };
+
+        const [sender] = await web3.eth.getAccounts();
+        const approvals = [];
+        if(sender != manager) {
+            approvals = await campaignContract.methods
+                                .getSelfApprovals()
+                                .call({ from: sender });
+        }
+
+        this.setState({
+            sender,
+            campaign: { minimumContribution, balance, budgetsCount, contributorsCount, manager, budgets, approvals },
+            loaded: true
+        });
+        console.log(this.state.campaign);
     }
 
     onApprove = async(budgetId) => {
-        const [sender] = await web3.eth.getAccounts();
-        const campaignContract = Campaign(this.props.campaign.address);
+        const campaignContract = Campaign(this.props.campaignAddress);
         await campaignContract.methods
             .approveBudget(budgetId)
             .send({
-                from: sender,
+                from: this.state.sender,
                 gas: '1000000'
             });
-        console.log(`Approved ${budgetId} by ${sender}`);
+        console.log(`Approved ${budgetId} by ${this.state.sender}`);
     }
 
     render() {
-        return (
-            <Layout>
-                <Link route={`/campaigns/${this.props.campaign.address}/requests/new`}>
-                    <Button
-                        floated="right"
-                        content="Request new budget"
-                        primary />
-                </Link>
-                <h3>Requests</h3>
-                <BudgetsTable
-                    campaign={ this.props.campaign }
-                    onApprove={ this.onApprove }/>
-            </Layout>
-        );
+        const loadingChild = (<span>Loading</span>);
+
+        const budgetsTable = (
+                <div>
+                    <Link route={`/campaigns/${this.props.campaignAddress}/requests/new`}>
+                        <Button
+                            floated="right"
+                            content="Request new budget"
+                            primary />
+                    </Link>
+                    <h3>Requests</h3>
+                        <BudgetsTable
+                            campaign={ this.state.campaign }
+                            onApprove={ this.onApprove }/>
+                </div>
+            );
+
+        const layout = (this.state.loaded ? budgetsTable : loadingChild);
+        return (<Layout>{ layout }</Layout> );
     }
 }
 

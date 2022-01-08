@@ -23,6 +23,7 @@ class BudgetsTable extends Component {
                 </Table.Header>
 
                 <Table.Body>
+                    { this.props.approvals }
                     { this.props.campaign.budgets.map((budget, index) =>
                         (<BudgetsTableRow
                             key={ index + 1 }
