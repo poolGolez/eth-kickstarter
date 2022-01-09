@@ -16,8 +16,10 @@ class CampaignsNew extends Component {
         event.preventDefault();
         try {
             const accounts = await web3.eth.getAccounts();
+            const minContributionWei = web3.utils.toWei(this.state.minContribution, 'ether');
+
             await CampaignFactory.methods
-                .createCampaign(this.state.minContribution)
+                .createCampaign(minContributionWei)
                 .send({
                     from: accounts[0],
                     gas: '1000000'
@@ -39,7 +41,7 @@ class CampaignsNew extends Component {
                     <Form.Field>
                         <label>Minimum Contribution</label>
                         <Input
-                            label={{basic: true, content: 'wei'}}
+                            label={{basic: true, content: 'ether'}}
                             labelPosition='right'
                             onChange={ event => this.setState({minContribution: event.target.value}) }
                             value={this.state.minContribution}/>
