@@ -42,7 +42,11 @@ class BudgetsTableRow extends Component {
                     { this.props.isApproved ? approvedSeal : approvedButton }
                 </Cell>
                 <Cell>
-                    <Button icon="check" content="Finalize"positive />
+                    <Button
+                        icon="check"
+                        content="Finalize"
+                        onClick={ this.props.onFinalize }
+                        positive/>
                 </Cell>
             </Row>
         );

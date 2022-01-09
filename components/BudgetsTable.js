@@ -32,6 +32,7 @@ class BudgetsTable extends Component {
                             budget={ budget }
                             isApproved={ this.props.campaign.approvals[index] }
                             onApprove={ () => this.props.onApprove(index) }
+                            onFinalize={ () => this.props.onFinalize(index) }
                             />)) }
                 </Table.Body>
             </Table>

@@ -72,6 +72,18 @@ class RequestsIndex extends Component {
         console.log(`Approved ${budgetId} by ${this.state.sender}`);
     }
 
+    onFinalize = async(budgetId) => {
+        console.log("BUDGET ID:", budgetId);
+        const campaignContract = Campaign(this.props.campaignAddress);
+        await campaignContract.methods
+            .releaseBudget(budgetId)
+            .send({
+                from: this.state.sender,
+                gas: '1000000'
+            });
+        console.log(`Released ${budgetId} by ${this.state.sender}`);
+    }
+
     render() {
         const loadingChild = (<span>Loading</span>);
 
@@ -86,7 +98,8 @@ class RequestsIndex extends Component {
                     <h3>Requests</h3>
                         <BudgetsTable
                             campaign={ this.state.campaign }
-                            onApprove={ this.onApprove }/>
+                            onApprove={ this.onApprove }
+                            onFinalize={ this.onFinalize }/>
                 </div>
             );
 
