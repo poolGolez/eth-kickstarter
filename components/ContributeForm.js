@@ -18,11 +18,13 @@ class ContributeForm extends Component {
 
         const campaignContract = Campaign(this.props.address);
         const [ accountAddress ] = await web3.eth.getAccounts();
+
+        const contributionWei = web3.utils.toWei(this.state.contribution, 'ether')
         await campaignContract.methods
             .contribute()
             .send({
                 from: accountAddress,
-                value: this.state.contribution,
+                value: contributionWei,
                 gas: '1000000'
             });
         Router.replaceRoute(`/campaigns/${this.props.address}`)
@@ -35,7 +37,7 @@ class ContributeForm extends Component {
                 <Form onSubmit={ this.onSubmit }>
                     <Form.Field>
                         <Input
-                            label={{basic: true, content: 'wei'}}
+                            label={{basic: true, content: 'ether'}}
                             labelPosition='right'
                             onChange={ event => this.setState({contribution: event.target.value}) }
                             value={this.state.contribution} />
