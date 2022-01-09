@@ -23,7 +23,7 @@ class CampaignsShow extends Component {
                             .call();
         return {
             campaignAddress,
-            minimumContribution: summary[0],
+            minimumContribution: web3.utils.fromWei(summary[0], 'ether'),
             balance: summary[1],
             budgetsCount: summary[2],
             contributorsCount: summary[3],
@@ -48,7 +48,7 @@ class CampaignsShow extends Component {
                 style: { overflowWrap: 'break-word' }
             },
             {
-                header: `${minimumContribution} wei`,
+                header: `${minimumContribution} ether`,
                 meta: 'Minimum Contribution',
                 description: 'You must contribute at least this much wei to become an approver.',
                 style: { overflowWrap: 'break-word' }
