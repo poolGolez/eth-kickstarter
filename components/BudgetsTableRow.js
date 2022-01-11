@@ -4,25 +4,47 @@ import web3 from "../ethereum/web3";
 const { Component } = require("react");
 
 class BudgetsTableRow extends Component {
+
+    approveCellElement(isApproved) {
+        if(isApproved) {
+            return (
+                <span>
+                    <Icon name="check circle" color="green"/>
+                    <font color="green"><b>Approved</b></font>
+                </span>
+            );
+        } else {
+            return (
+                <Button
+                icon="thumbs up"
+                content="Approve"
+                onClick={ this.props.onApprove }
+                primary />
+            );
+        }
+    }
+
+    finalizeCellElement = function (isComplete) {
+        if(isComplete) {
+            return (
+                <span>
+                    <Icon name="check circle" color="green"/>
+                    <font color="green"><b>Released</b></font>
+                </span>
+            );
+        } else {
+            return (
+                <Button
+                    icon="check"
+                    content="Finalize"
+                    onClick={ this.props.onFinalize }
+                    positive/>
+            );
+        }
+    }
+
     render() {
         const { Row, Cell } = Table;
-        console.log(this.props.isApproved);
-
-        const approvedButton = (
-            <Button
-            icon="thumbs up"
-            content="Approve"
-            onClick={ this.props.onApprove }
-            primary />
-        );
-
-        const approvedSeal = (
-            <span>
-                <Icon name="check circle" color="green"/>
-                <font color="green"><b>Approved</b></font>
-            </span>
-        );
-
         return (
             <Row key={ this.props.index }>
                 <Cell>
@@ -39,14 +61,10 @@ class BudgetsTableRow extends Component {
                     { this.props.budget.approvalsCount } / { this.props.contributorsCount }
                 </Cell>
                 <Cell>
-                    { this.props.isApproved ? approvedSeal : approvedButton }
+                    { this.approveCellElement(this.props.isApproved) }
                 </Cell>
                 <Cell>
-                    <Button
-                        icon="check"
-                        content="Finalize"
-                        onClick={ this.props.onFinalize }
-                        positive/>
+                    { this.finalizeCellElement(this.props.budget.completed) }
                 </Cell>
             </Row>
         );
